@@ -1,9 +1,13 @@
 import argparse
 from typing import Iterable, List, Optional, Union
-
-import pandas as pd
 import yfinance as yf
-
+from __future__ import annotations
+from dataclasses import dataclass
+import pandas as pd
+import boto3
+from io import BytesIO
+import pyarrow as pa
+import pyarrow.parquet as pq
 
 def normalize_tickers(raw: str) -> List[str]:
     tickers: List[str] = []
@@ -31,7 +35,7 @@ def normalize_tickers_input(raw: Union[str, Iterable[str]]) -> List[str]:
         tickers.append(ticker)
     return tickers
 
-
+@dataclass
 class B3Scraper:
     def __init__(
         self,

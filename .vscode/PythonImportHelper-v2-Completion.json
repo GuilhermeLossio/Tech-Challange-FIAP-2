@@ -1,0 +1,327 @@
+[
+    {
+        "label": "sys",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "sys",
+        "description": "sys",
+        "detail": "sys",
+        "documentation": {}
+    },
+    {
+        "label": "json",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "json",
+        "description": "json",
+        "detail": "json",
+        "documentation": {}
+    },
+    {
+        "label": "argparse",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "argparse",
+        "description": "argparse",
+        "detail": "argparse",
+        "documentation": {}
+    },
+    {
+        "label": "pformat",
+        "importPath": "pprint",
+        "description": "pprint",
+        "isExtraImport": true,
+        "detail": "pprint",
+        "documentation": {}
+    },
+    {
+        "label": "jmespath",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "jmespath",
+        "description": "jmespath",
+        "detail": "jmespath",
+        "documentation": {}
+    },
+    {
+        "label": "exceptions",
+        "importPath": "jmespath",
+        "description": "jmespath",
+        "isExtraImport": true,
+        "detail": "jmespath",
+        "documentation": {}
+    },
+    {
+        "label": "Any",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Dict",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Iterable",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "List",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Iterable",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "List",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Union",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "boto3",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "boto3",
+        "description": "boto3",
+        "detail": "boto3",
+        "documentation": {}
+    },
+    {
+        "label": "ClientError",
+        "importPath": "botocore.exceptions",
+        "description": "botocore.exceptions",
+        "isExtraImport": true,
+        "detail": "botocore.exceptions",
+        "documentation": {}
+    },
+    {
+        "label": "date",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "B3Scraper",
+        "importPath": "WebScrapping",
+        "description": "WebScrapping",
+        "isExtraImport": true,
+        "detail": "WebScrapping",
+        "documentation": {}
+    },
+    {
+        "label": "yfinance",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "yfinance",
+        "description": "yfinance",
+        "detail": "yfinance",
+        "documentation": {}
+    },
+    {
+        "label": "annotations",
+        "importPath": "__future__",
+        "description": "__future__",
+        "isExtraImport": true,
+        "detail": "__future__",
+        "documentation": {}
+    },
+    {
+        "label": "dataclass",
+        "importPath": "dataclasses",
+        "description": "dataclasses",
+        "isExtraImport": true,
+        "detail": "dataclasses",
+        "documentation": {}
+    },
+    {
+        "label": "pandas",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "pandas",
+        "description": "pandas",
+        "detail": "pandas",
+        "documentation": {}
+    },
+    {
+        "label": "BytesIO",
+        "importPath": "io",
+        "description": "io",
+        "isExtraImport": true,
+        "detail": "io",
+        "documentation": {}
+    },
+    {
+        "label": "pyarrow",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "pyarrow",
+        "description": "pyarrow",
+        "detail": "pyarrow",
+        "documentation": {}
+    },
+    {
+        "label": "pyarrow.parquet",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "pyarrow.parquet",
+        "description": "pyarrow.parquet",
+        "detail": "pyarrow.parquet",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": ".venv.Scripts.jp",
+        "description": ".venv.Scripts.jp",
+        "peekOfCode": "def main():\n    parser = argparse.ArgumentParser()\n    parser.add_argument('expression')\n    parser.add_argument('-f', '--filename',\n                        help=('The filename containing the input data.  '\n                              'If a filename is not given then data is '\n                              'read from stdin.'))\n    parser.add_argument('--ast', action='store_true',\n                        help=('Pretty print the AST, do not search the data.'))\n    args = parser.parse_args()",
+        "detail": ".venv.Scripts.jp",
+        "documentation": {}
+    },
+    {
+        "label": "S3BucketClient",
+        "kind": 6,
+        "importPath": "AwsFunctions.AwsFunctions",
+        "description": "AwsFunctions.AwsFunctions",
+        "peekOfCode": "class S3BucketClient:\n    \"\"\"Small wrapper for common S3 operations in a single bucket.\"\"\"\n    def __init__(\n        self,\n        bucket_name: str,\n        region_name: Optional[str] = None,\n        aws_access_key_id: Optional[str] = None,\n        aws_secret_access_key: Optional[str] = None,\n        aws_session_token: Optional[str] = None,\n        client: Optional[Any] = None,",
+        "detail": "AwsFunctions.AwsFunctions",
+        "documentation": {}
+    },
+    {
+        "label": "build_parser",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def build_parser() -> argparse.ArgumentParser:\n    parser = argparse.ArgumentParser(\n        description=\"Download B3 data with default airline sector tickers and save to Parquet.\"\n    )\n    parser.add_argument(\n        \"--tickers\",\n        default=DEFAULT_TICKERS,\n        help=(\n            \"Comma-separated tickers \"\n            f\"(default: {DEFAULT_TICKERS}; accepts PETR4,VALE3 or PETR4.SA,VALE3.SA)\"",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def main() -> None:\n    args = build_parser().parse_args()\n    scraper = B3Scraper(\n        tickers=args.tickers,\n        start=args.start,\n        end=args.end,\n        period=args.period,\n        interval=args.interval,\n        output=args.output,\n    )",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "DEFAULT_TICKERS",
+        "kind": 5,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "DEFAULT_TICKERS = \"GOLL4,AZUL4,EMBR3,EVEB31\"\ndef build_parser() -> argparse.ArgumentParser:\n    parser = argparse.ArgumentParser(\n        description=\"Download B3 data with default airline sector tickers and save to Parquet.\"\n    )\n    parser.add_argument(\n        \"--tickers\",\n        default=DEFAULT_TICKERS,\n        help=(\n            \"Comma-separated tickers \"",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "B3Scraper",
+        "kind": 6,
+        "importPath": "WebScrapping",
+        "description": "WebScrapping",
+        "peekOfCode": "class B3Scraper:\n    def __init__(\n        self,\n        tickers: Union[str, Iterable[str]],\n        start: Optional[str] = None,\n        end: Optional[str] = None,\n        period: str = \"1y\",\n        interval: str = \"1d\",\n        output: str = \"b3_data.parquet\",\n    ) -> None:",
+        "detail": "WebScrapping",
+        "documentation": {}
+    },
+    {
+        "label": "normalize_tickers",
+        "kind": 2,
+        "importPath": "WebScrapping",
+        "description": "WebScrapping",
+        "peekOfCode": "def normalize_tickers(raw: str) -> List[str]:\n    tickers: List[str] = []\n    for part in raw.split(\",\"):\n        ticker = part.strip().upper()\n        if not ticker:\n            continue\n        if \".\" not in ticker and not ticker.startswith(\"^\"):\n            ticker = f\"{ticker}.SA\"\n        tickers.append(ticker)\n    return tickers",
+        "detail": "WebScrapping",
+        "documentation": {}
+    },
+    {
+        "label": "normalize_tickers_input",
+        "kind": 2,
+        "importPath": "WebScrapping",
+        "description": "WebScrapping",
+        "peekOfCode": "def normalize_tickers_input(raw: Union[str, Iterable[str]]) -> List[str]:\n    if isinstance(raw, str):\n        return normalize_tickers(raw)\n    tickers: List[str] = []\n    for part in raw:\n        ticker = str(part).strip().upper()\n        if not ticker:\n            continue\n        if \".\" not in ticker and not ticker.startswith(\"^\"):\n            ticker = f\"{ticker}.SA\"",
+        "detail": "WebScrapping",
+        "documentation": {}
+    },
+    {
+        "label": "download_data",
+        "kind": 2,
+        "importPath": "WebScrapping",
+        "description": "WebScrapping",
+        "peekOfCode": "def download_data(\n    tickers: List[str],\n    start: Optional[str],\n    end: Optional[str],\n    period: str,\n    interval: str,\n) -> pd.DataFrame:\n    if not tickers:\n        raise ValueError(\"No tickers provided.\")\n    kwargs = {",
+        "detail": "WebScrapping",
+        "documentation": {}
+    },
+    {
+        "label": "normalize_download",
+        "kind": 2,
+        "importPath": "WebScrapping",
+        "description": "WebScrapping",
+        "peekOfCode": "def normalize_download(data: pd.DataFrame, tickers: List[str]) -> pd.DataFrame:\n    if isinstance(data.columns, pd.MultiIndex):\n        try:\n            stacked = data.stack(level=0, future_stack=True)\n        except TypeError:\n            stacked = data.stack(level=0)\n        df = stacked.rename_axis(index=[\"date\", \"ticker\"]).reset_index()\n    else:\n        df = data.reset_index()\n        df.insert(1, \"ticker\", tickers[0] if tickers else \"\")",
+        "detail": "WebScrapping",
+        "documentation": {}
+    },
+    {
+        "label": "build_parser",
+        "kind": 2,
+        "importPath": "WebScrapping",
+        "description": "WebScrapping",
+        "peekOfCode": "def build_parser() -> argparse.ArgumentParser:\n    parser = argparse.ArgumentParser(\n        description=\"Download B3 data from yfinance and save to Parquet.\"\n    )\n    parser.add_argument(\n        \"--tickers\",\n        required=True,\n        help=\"Comma-separated tickers (e.g., PETR4,VALE3 or PETR4.SA,VALE3.SA)\",\n    )\n    parser.add_argument(\"--start\", help=\"Start date YYYY-MM-DD\")",
+        "detail": "WebScrapping",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "WebScrapping",
+        "description": "WebScrapping",
+        "peekOfCode": "def main() -> None:\n    args = build_parser().parse_args()\n    scraper = B3Scraper(\n        tickers=args.tickers,\n        start=args.start,\n        end=args.end,\n        period=args.period,\n        interval=args.interval,\n        output=args.output,\n    )",
+        "detail": "WebScrapping",
+        "documentation": {}
+    }
+]
