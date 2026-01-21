@@ -241,11 +241,29 @@
         "documentation": {}
     },
     {
-        "label": "B3Scraper",
-        "importPath": "src.ingestion.WebScrapping",
-        "description": "src.ingestion.WebScrapping",
+        "label": "re",
+        "kind": 6,
         "isExtraImport": true,
-        "detail": "src.ingestion.WebScrapping",
+        "importPath": "re",
+        "description": "re",
+        "detail": "re",
+        "documentation": {}
+    },
+    {
+        "label": "os",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "os",
+        "description": "os",
+        "detail": "os",
+        "documentation": {}
+    },
+    {
+        "label": "B3Scraper",
+        "importPath": "ingestion.WebScrapping",
+        "description": "ingestion.WebScrapping",
+        "isExtraImport": true,
+        "detail": "ingestion.WebScrapping",
         "documentation": {}
     },
     {
@@ -280,7 +298,7 @@
         "kind": 5,
         "importPath": "src.ingestion.run_ingestion",
         "description": "src.ingestion.run_ingestion",
-        "peekOfCode": "DT = (date.today() - timedelta(days=1)).strftime(\"%Y-%m-%d\")\n# Airline sector tickers (B3)\nTICKERS = \"GOLL4,AZUL4,EMBR3,EVEB31\"\n# Raw data lake location\nS3_BUCKET = \"b3-data-lake-gui\"\nRAW_PREFIX = \"raw\"\n# ---------------------------------------------------------\n# Ingestion\n# ---------------------------------------------------------\ndef main() -> None:",
+        "peekOfCode": "DT = (date.today() - timedelta(days=1)).strftime(\"%Y-%m-%d\")\n# Airline sector tickers (B3)\nTICKERS = \"GOLL4,AZUL4,EMBR3,EVEB31\"\n# Raw data lake location\nS3_BUCKET = \"aeronaticalverifier-s3\"\nRAW_PREFIX = \"raw\"\n# ---------------------------------------------------------\n# Ingestion\n# ---------------------------------------------------------\ndef main() -> None:",
         "detail": "src.ingestion.run_ingestion",
         "documentation": {}
     },
@@ -289,7 +307,7 @@
         "kind": 5,
         "importPath": "src.ingestion.run_ingestion",
         "description": "src.ingestion.run_ingestion",
-        "peekOfCode": "TICKERS = \"GOLL4,AZUL4,EMBR3,EVEB31\"\n# Raw data lake location\nS3_BUCKET = \"b3-data-lake-gui\"\nRAW_PREFIX = \"raw\"\n# ---------------------------------------------------------\n# Ingestion\n# ---------------------------------------------------------\ndef main() -> None:\n    scraper = B3Scraper(\n        tickers=TICKERS,",
+        "peekOfCode": "TICKERS = \"GOLL4,AZUL4,EMBR3,EVEB31\"\n# Raw data lake location\nS3_BUCKET = \"aeronaticalverifier-s3\"\nRAW_PREFIX = \"raw\"\n# ---------------------------------------------------------\n# Ingestion\n# ---------------------------------------------------------\ndef main() -> None:\n    scraper = B3Scraper(\n        tickers=TICKERS,",
         "detail": "src.ingestion.run_ingestion",
         "documentation": {}
     },
@@ -298,7 +316,7 @@
         "kind": 5,
         "importPath": "src.ingestion.run_ingestion",
         "description": "src.ingestion.run_ingestion",
-        "peekOfCode": "S3_BUCKET = \"b3-data-lake-gui\"\nRAW_PREFIX = \"raw\"\n# ---------------------------------------------------------\n# Ingestion\n# ---------------------------------------------------------\ndef main() -> None:\n    scraper = B3Scraper(\n        tickers=TICKERS,\n        period=\"5d\",     # small window to guarantee D-1 availability\n        interval=\"1d\",",
+        "peekOfCode": "S3_BUCKET = \"aeronaticalverifier-s3\"\nRAW_PREFIX = \"raw\"\n# ---------------------------------------------------------\n# Ingestion\n# ---------------------------------------------------------\ndef main() -> None:\n    scraper = B3Scraper(\n        tickers=TICKERS,\n        period=\"5d\",     # small window to guarantee D-1 availability\n        interval=\"1d\",",
         "detail": "src.ingestion.run_ingestion",
         "documentation": {}
     },
@@ -372,6 +390,42 @@
         "description": "src.ingestion.WebScrapping",
         "peekOfCode": "def main() -> None:\n    args = build_parser().parse_args()\n    scraper = B3Scraper(\n        tickers=args.tickers,\n        start=args.start,\n        end=args.end,\n        period=args.period,\n        interval=args.interval,\n        output=args.output,\n    )",
         "detail": "src.ingestion.WebScrapping",
+        "documentation": {}
+    },
+    {
+        "label": "lambda_handler",
+        "kind": 2,
+        "importPath": "src.lambda.start_glue_job",
+        "description": "src.lambda.start_glue_job",
+        "peekOfCode": "def lambda_handler(event, context):\n    record = event[\"Records\"][0]\n    key = record[\"s3\"][\"object\"][\"key\"]\n    dt = DT_RE.search(key).group(1)\n    glue.start_job_run(\n        JobName=JOB_NAME,\n        Arguments={\"--dt\": dt}\n    )",
+        "detail": "src.lambda.start_glue_job",
+        "documentation": {}
+    },
+    {
+        "label": "glue",
+        "kind": 5,
+        "importPath": "src.lambda.start_glue_job",
+        "description": "src.lambda.start_glue_job",
+        "peekOfCode": "glue = boto3.client(\"glue\")\nJOB_NAME = os.environ[\"GLUE_JOB_NAME\"]\nDT_RE = re.compile(r\"raw/dt=(\\d{4}-\\d{2}-\\d{2})/\")\ndef lambda_handler(event, context):\n    record = event[\"Records\"][0]\n    key = record[\"s3\"][\"object\"][\"key\"]\n    dt = DT_RE.search(key).group(1)\n    glue.start_job_run(\n        JobName=JOB_NAME,\n        Arguments={\"--dt\": dt}",
+        "detail": "src.lambda.start_glue_job",
+        "documentation": {}
+    },
+    {
+        "label": "JOB_NAME",
+        "kind": 5,
+        "importPath": "src.lambda.start_glue_job",
+        "description": "src.lambda.start_glue_job",
+        "peekOfCode": "JOB_NAME = os.environ[\"GLUE_JOB_NAME\"]\nDT_RE = re.compile(r\"raw/dt=(\\d{4}-\\d{2}-\\d{2})/\")\ndef lambda_handler(event, context):\n    record = event[\"Records\"][0]\n    key = record[\"s3\"][\"object\"][\"key\"]\n    dt = DT_RE.search(key).group(1)\n    glue.start_job_run(\n        JobName=JOB_NAME,\n        Arguments={\"--dt\": dt}\n    )",
+        "detail": "src.lambda.start_glue_job",
+        "documentation": {}
+    },
+    {
+        "label": "DT_RE",
+        "kind": 5,
+        "importPath": "src.lambda.start_glue_job",
+        "description": "src.lambda.start_glue_job",
+        "peekOfCode": "DT_RE = re.compile(r\"raw/dt=(\\d{4}-\\d{2}-\\d{2})/\")\ndef lambda_handler(event, context):\n    record = event[\"Records\"][0]\n    key = record[\"s3\"][\"object\"][\"key\"]\n    dt = DT_RE.search(key).group(1)\n    glue.start_job_run(\n        JobName=JOB_NAME,\n        Arguments={\"--dt\": dt}\n    )",
+        "detail": "src.lambda.start_glue_job",
         "documentation": {}
     },
     {

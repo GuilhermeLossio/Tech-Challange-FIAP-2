@@ -24,7 +24,7 @@ DT = (date.today() - timedelta(days=1)).strftime("%Y-%m-%d")
 TICKERS = "GOLL4,AZUL4,EMBR3,EVEB31"
 
 # Raw data lake location
-S3_BUCKET = "b3-data-lake-gui"
+S3_BUCKET = "aeronaticalverifier-s3"
 RAW_PREFIX = "raw"
 
 # ---------------------------------------------------------

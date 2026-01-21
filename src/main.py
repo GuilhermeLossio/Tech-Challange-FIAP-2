@@ -1,7 +1,8 @@
 import argparse
 from datetime import date
+import os
 
-from src.ingestion.WebScrapping import B3Scraper
+from ingestion.WebScrapping import B3Scraper
 
 
 DEFAULT_TICKERS = "GOLL4,AZUL4,EMBR3,EVEB31"
@@ -27,7 +28,14 @@ def build_parser() -> argparse.ArgumentParser:
         help="Used when start/end are not provided (e.g., 1mo, 1y, 5y, max)",
     )
     
-    parser.add_argument("--s3-bucket", required=True, help="S3 bucket for the data lake")
+
+
+    parser.add_argument(
+        "--s3-bucket",
+        default=os.getenv("AWS_BUCKET"),
+        required=os.getenv("AWS_BUCKET") is None,
+        help="S3 bucket for raw data"
+    )
     parser.add_argument("--s3-prefix", default="raw", help="Base prefix (default raw)")
 
     
