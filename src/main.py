@@ -1,7 +1,7 @@
 import argparse
 from datetime import date
 
-from WebScrapping import B3Scraper
+from src.ingestion.WebScrapping import B3Scraper
 
 
 DEFAULT_TICKERS = "GOLL4,AZUL4,EMBR3,EVEB31"
