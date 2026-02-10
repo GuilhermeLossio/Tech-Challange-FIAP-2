@@ -1,0 +1,45 @@
+import os
+from datetime import datetime, timezone
+import yfinance as yf
+import pandas as pd
+import pyarrow as pa
+import pyarrow.parquet as pq
+import boto3
+
+s3 = boto3.client("s3")
+
+BUCKET = os.environ["RAW_BUCKET"]
+RAW_PREFIX = os.environ.get("RAW_PREFIX", "raw").strip("/")
+
+DEFAULT_TICKERS = os.environ.get("TICKERS", "AZUL4.SA,GOLL4.SA").split(",")
+
+def lambda_handler(event, context):
+    tickers = event.get("tickers") or DEFAULT_TICKERS
+
+    df_all = []
+    for t in tickers:
+        df = yf.download(t, period="365d", interval="1d", auto_adjust=False, progress=False)
+        if df is None or df.empty:
+            continue
+        df = df.reset_index()
+        df["ticker"] = t.replace(".SA", "")
+        df_all.append(df)
+
+    if not df_all:
+        return {"status": "no_data", "tickers": tickers}
+
+    df = pd.concat(df_all, ignore_index=True)
+    df.rename(columns={"Date": "date"}, inplace=True)
+    df["date"] = pd.to_datetime(df["date"]).dt.date.astype(str)
+
+    uploaded = []
+    for d, part in df.groupby("date"):
+        table = pa.Table.from_pandas(part, preserve_index=False)
+        key = f"{RAW_PREFIX}/dt={d}/data.parquet"
+        buf = pa.BufferOutputStream()
+        pq.write_table(table, buf)
+        body = buf.getvalue().to_pybytes()
+        s3.put_object(Bucket=BUCKET, Key=key, Body=body)
+        uploaded.append(f"s3://{BUCKET}/{key}")
+
+    return {"status": "ok", "uploaded": uploaded, "tickers": tickers}
