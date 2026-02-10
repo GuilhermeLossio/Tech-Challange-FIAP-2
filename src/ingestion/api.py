@@ -7,7 +7,6 @@ from fastapi import FastAPI, Header, HTTPException
 
 from ingestion.run_ingestion import run_daily_ingestion
 
-
 app = FastAPI(title="Ingestion API", version="1.0.0")
 
 
