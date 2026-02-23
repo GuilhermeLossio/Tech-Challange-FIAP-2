@@ -5,7 +5,7 @@ from typing import Optional
 
 from fastapi import FastAPI, Header, HTTPException
 
-from ingestion.run_ingestion import run_daily_ingestion
+from ingestion.run_ingestion import run_backfill_ingestion, run_daily_ingestion
 
 app = FastAPI(title="Ingestion API", version="1.0.0")
 
@@ -53,4 +53,42 @@ def run_ingestion(
         "date": result["dt"],
         "skipped": result["skipped"],
         "uris": result["uris"],
+    }
+
+
+@app.post("/ingestion/backfill")
+def run_ingestion_backfill(
+    start: str,
+    end: str,
+    tickers: Optional[str] = None,
+    s3_bucket: Optional[str] = None,
+    raw_prefix: Optional[str] = None,
+    interval: Optional[str] = None,
+    trigger_refined: bool = True,
+    glue_job_name: Optional[str] = None,
+    authorization: Optional[str] = Header(None),
+    x_cron_secret: Optional[str] = Header(None),
+) -> dict:
+    _check_secret(authorization, x_cron_secret)
+
+    try:
+        result = run_backfill_ingestion(
+            start_date=start,
+            end_date=end,
+            tickers=tickers,
+            s3_bucket=s3_bucket,
+            raw_prefix=raw_prefix,
+            interval=interval,
+            trigger_refined=trigger_refined,
+            glue_job_name=glue_job_name,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+    return {
+        "start_date": result["start_date"],
+        "end_date": result["end_date"],
+        "partition_dates": result["partition_dates"],
+        "raw_uris": result["uris"],
+        "glue_runs": result["glue_runs"],
     }

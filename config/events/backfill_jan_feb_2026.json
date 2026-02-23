@@ -1,0 +1,11 @@
+{
+  "mode": "backfill",
+  "start": "2026-01-01",
+  "end": "2026-02-28",
+  "tickers": "GOLL4,AZUL4,EMBR3,EVEB31",
+  "s3_bucket": "your-raw-bucket",
+  "raw_prefix": "raw",
+  "interval": "1d",
+  "trigger_refined": true,
+  "glue_job_name": "your-glue-job-name"
+}

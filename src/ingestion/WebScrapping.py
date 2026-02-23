@@ -136,6 +136,15 @@ def _dt_str(d: dt_date) -> str:
     return d.strftime("%Y-%m-%d")
 
 
+def _normalize_s3_prefix(prefix: Optional[str]) -> str:
+    value = str(prefix or "raw").strip().strip("/")
+    if not value:
+        return "raw"
+    if value.lower().startswith("unsaved"):
+        return "raw"
+    return value
+
+
 @dataclass
 class B3Scraper:
     def __init__(
@@ -194,6 +203,7 @@ class B3Scraper:
         """
         df = self.fetch()
         self.row_count = len(df)
+        safe_prefix = _normalize_s3_prefix(prefix)
 
         s3 = boto3.client("s3")
         keys_written: List[str] = []
@@ -205,7 +215,7 @@ class B3Scraper:
                 raise ValueError(f"No data found for dt={dt}.")
             body = _write_parquet_bytes(df_day)
             fname = "data.parquet" if one_file_per_day else f"data_{_dt_str(target)}.parquet"
-            key = f"{prefix}/dt={_dt_str(target)}/{fname}"
+            key = f"{safe_prefix}/dt={_dt_str(target)}/{fname}"
             s3.put_object(Bucket=bucket, Key=key, Body=body)
             keys_written.append(f"s3://{bucket}/{key}")
             return keys_written
@@ -217,7 +227,7 @@ class B3Scraper:
                 continue
             body = _write_parquet_bytes(df_day)
             fname = "data.parquet" if one_file_per_day else f"data_{_dt_str(d)}.parquet"
-            key = f"{prefix}/dt={_dt_str(d)}/{fname}"
+            key = f"{safe_prefix}/dt={_dt_str(d)}/{fname}"
             s3.put_object(Bucket=bucket, Key=key, Body=body)
             keys_written.append(f"s3://{bucket}/{key}")
 

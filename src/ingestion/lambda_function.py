@@ -1,82 +1,110 @@
 """
-Função AWS Lambda para ingestão diária de dados brutos.
+AWS Lambda entrypoint for ingestion.
 
-Esta função foi projetada para ser acionada por um agendamento (por exemplo,
-diariamente via Amazon EventBridge) para ingerir dados do mercado de ações
-do dia útil anterior.
+Modes:
+- daily (default): ingest D-1 into raw
+- backfill: ingest a date range into raw and optionally trigger refined jobs
 """
+
+from __future__ import annotations
 
 import json
 import logging
-import os
-from datetime import date, timedelta
+from typing import Any, Dict
 
-# Assumindo que o pacote de implantação da Lambda inclui o conteúdo do
-# diretório 'src' e que ele é adicionado ao PYTHONPATH.
-from ingestion.WebScrapping import B3Scraper
+from ingestion.run_ingestion import (
+    run_backfill_ingestion,
+    run_daily_ingestion,
+    trigger_refined_glue_jobs,
+)
 
-# Configura o logging
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-# ---------------------------------------------------------
-# Variáveis de Ambiente com Padrões
-# ---------------------------------------------------------
-DEFAULT_TICKERS = "GOLL4,AZUL4,EMBR3,EVEB31"
-DEFAULT_S3_BUCKET = "aeronaticalverifier-s3"
-DEFAULT_RAW_PREFIX = "raw"
 
-TICKERS = os.getenv("TICKERS", DEFAULT_TICKERS)
-S3_BUCKET = os.getenv("S3_BUCKET", DEFAULT_S3_BUCKET)
-RAW_PREFIX = os.getenv("RAW_PREFIX", DEFAULT_RAW_PREFIX)
+def _is_backfill_event(event: Dict[str, Any]) -> bool:
+    return event.get("mode") == "backfill" or (
+        event.get("start") is not None and event.get("end") is not None
+    )
 
 
 def lambda_handler(event, context):
-    """
-    Handler da AWS Lambda para ingestão diária de dados de ações da B3.
+    event = event or {}
 
-    Ingere dados do dia útil anterior (D-1) e os salva em um bucket S3
-    particionado em formato Parquet.
-
-    Variáveis de Ambiente:
-    - TICKERS: Lista de tickers de ações separada por vírgula (ex: "GOLL4,AZUL4").
-    - S3_BUCKET: O bucket S3 para armazenar os dados brutos.
-    - RAW_PREFIX: O prefixo dentro do bucket para os dados brutos (ex: "raw").
-    """
     try:
-        # Padrão da indústria: ingerir o dia útil anterior (D-1)
-        target_date = date.today() - timedelta(days=1)
-        dt_partition = target_date.strftime("%Y-%m-%d")
+        if _is_backfill_event(event):
+            result = run_backfill_ingestion(
+                start_date=event.get("start"),
+                end_date=event.get("end"),
+                tickers=event.get("tickers"),
+                s3_bucket=event.get("s3_bucket"),
+                raw_prefix=event.get("raw_prefix"),
+                interval=event.get("interval"),
+                trigger_refined=bool(event.get("trigger_refined", True)),
+                glue_job_name=event.get("glue_job_name"),
+            )
 
-        # Pula fins de semana
-        if target_date.weekday() > 4:  # 5=Sáb, 6=Dom
-            message = f"Ingestão pulada: {dt_partition} é um fim de semana."
+            logger.info(
+                "Backfill completed. partitions=%s raw_files=%s glue_runs=%s",
+                len(result["partition_dates"]),
+                len(result["uris"]),
+                len(result["glue_runs"]),
+            )
+
+            return {
+                "statusCode": 200,
+                "body": json.dumps(
+                    {
+                        "mode": "backfill",
+                        "start_date": result["start_date"],
+                        "end_date": result["end_date"],
+                        "partition_dates": result["partition_dates"],
+                        "raw_uris": result["uris"],
+                        "glue_runs": result["glue_runs"],
+                    }
+                ),
+            }
+
+        # Daily mode (default)
+        result = run_daily_ingestion(
+            target_date=event.get("dt"),
+            tickers=event.get("tickers"),
+            s3_bucket=event.get("s3_bucket"),
+            raw_prefix=event.get("raw_prefix"),
+            period=event.get("period"),
+            interval=event.get("interval"),
+        )
+
+        if result["skipped"]:
+            message = f"Ingestion skipped: {result['dt']} is a weekend."
             logger.info(message)
-            return {"statusCode": 200, "body": json.dumps({"message": message})}
+            return {
+                "statusCode": 200,
+                "body": json.dumps({"mode": "daily", "message": message}),
+            }
 
-        logger.info(f"Iniciando ingestão para a data: {dt_partition}")
-        logger.info(f"Tickers: {TICKERS}")
-        logger.info(f"S3 Bucket: s3://{S3_BUCKET}/{RAW_PREFIX}")
+        glue_runs = []
+        if bool(event.get("trigger_refined", False)):
+            glue_runs = trigger_refined_glue_jobs(
+                partition_dates=[result["dt"]],
+                glue_job_name=event.get("glue_job_name"),
+            )
 
-        scraper = B3Scraper(
-            tickers=TICKERS,
-            period="5d",  # Usa uma janela pequena para garantir que os dados D-1 estejam disponíveis
-            interval="1d",
-        )
-
-        uris = scraper.save_to_s3_partitioned(
-            bucket=S3_BUCKET, prefix=RAW_PREFIX, dt=dt_partition
-        )
-
-        for uri in uris:
-            logger.info(f"Ingerido: {uri}")
-
-        message = f"Ingestão de {len(uris)} partição(ões) para {dt_partition} concluída com sucesso."
         return {
             "statusCode": 200,
-            "body": json.dumps({"message": message, "uris": uris}),
+            "body": json.dumps(
+                {
+                    "mode": "daily",
+                    "date": result["dt"],
+                    "raw_uris": result["uris"],
+                    "glue_runs": glue_runs,
+                }
+            ),
         }
 
-    except Exception as e:
-        logger.error(f"Falha na ingestão: {e}", exc_info=True)
-        return {"statusCode": 500, "body": json.dumps({"error": str(e)})}
+    except Exception as exc:
+        logger.error("Ingestion failed: %s", exc, exc_info=True)
+        return {
+            "statusCode": 500,
+            "body": json.dumps({"error": str(exc)}),
+        }
