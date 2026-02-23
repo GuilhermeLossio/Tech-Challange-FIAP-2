@@ -228,10 +228,10 @@ aws lambda invoke \
 
 ## Roadmap
 
-- [ ] Implement `src/glue/refined_job.py` with business transformations and `b3_refined` writes
-- [ ] Add unit tests for normalization and date selection logic
-- [ ] Add CI/CD with lint, tests, and dependency security checks
-- [ ] Publish operation runbook (backfill, rollback, troubleshooting)
+- [x] Implement `src/glue/refined_job.py` with business transformations and `b3_refined` writes
+- [x] Add unit tests for normalization and date selection logic
+- [x] Add CI/CD with lint, tests, and dependency security checks
+- [x] Publish operation runbook (backfill, rollback, troubleshooting)
 
 ## Architectural Decisions
 
