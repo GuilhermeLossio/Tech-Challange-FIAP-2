@@ -1,6 +1,6 @@
-# B3 Data Platform
+# B3 Aviation & Aerospace Market Data Pipeline
 
-Pipeline for ingestion, storage, and transformation of B3 market data.
+Targeted data engineering pipeline dedicated to Brazilian aviation and aerospace stocks listed on B3. Automates ingestion, normalization, and transformation of market data to support sector-specific financial analysis and investment research.
 
 [![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688?style=flat-square&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
